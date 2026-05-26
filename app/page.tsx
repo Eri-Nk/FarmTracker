@@ -1,26 +1,11 @@
-import TrackingDemo from "@/components/TrackingDemo";
-import { Stage } from "@/types";
+import { Suspense } from "react";
+import TrackingSection from "@/components/TrackingSection";
+import TrackingSkeleton from "@/components/TrackingSkeleton";
+import LogsContainer from "@/logs/LogsContainer";
+import LogsSkeleton from "@/logs/LogsSkeleton";
+import AddLogForm from "@/logs/AddLogForm";
 
-const company = {
-  name: "AgroCorp Logistics",
-};
-
-const stages: Stage[] = [
-  {
-    name: "Harvested",
-    status: "completed",
-    time: "08:00 AM",
-    location: "Farm",
-  },
-  {
-    name: "In Transit",
-    status: "current",
-    time: "10:00 AM",
-    location: "Lagos → Abuja",
-  },
-  { name: "Delivered", status: "pending" },
-];
-const Home = () => {
+export default async function Home() {
   return (
     <main className="max-w-2xl mx-auto p-6 space-y-10">
       <section className="mb-8">
@@ -40,9 +25,13 @@ const Home = () => {
           losses.
         </p>
       </section>
-      <TrackingDemo stages={stages} companyName={company.name} />
+      <Suspense fallback={<TrackingSkeleton />}>
+        <TrackingSection />
+      </Suspense>
+
+      <Suspense fallback={<LogsSkeleton />}>
+        <LogsContainer />
+      </Suspense>
     </main>
   );
-};
-
-export default Home;
+}

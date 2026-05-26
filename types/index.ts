@@ -1,6 +1,6 @@
 export type Stage = {
-  name: String;
+  name: string;
   status: "completed" | "current" | "pending";
-  time?: String;
+  time?: string;
   location?: string;
 };

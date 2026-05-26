@@ -2,15 +2,19 @@
 
 import clsx from "clsx";
 import { Stage } from "@/types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type TrackingDemoProps = {
   stages: Stage[];
   companyName: string;
 };
 
-const TrackingDemo = ({ stages }: TrackingDemoProps) => {
+const TrackingDemo = ({ stages, companyName }: TrackingDemoProps) => {
   const [currentStages, setCurrentStages] = useState(stages);
+
+  useEffect(() => {
+    setCurrentStages(stages);
+  }, [stages]);
   const [logs, setLogs] = useState<string[]>([]);
 
   const moveForward = () => {
@@ -36,7 +40,7 @@ const TrackingDemo = ({ stages }: TrackingDemoProps) => {
         stage.status === "pending" &&
         currentStages[index - 1]?.status === "completed"
       ) {
-        logMessage += ` | ${stage.name} started at ${getTime()}`;
+        logMessage += ` ${stage.name} started at ${getTime()}`;
         return { ...stage, status: "current" as const, time: getTime() };
       }
 
@@ -48,12 +52,22 @@ const TrackingDemo = ({ stages }: TrackingDemoProps) => {
       setLogs((prev) => [...prev, logMessage]);
     }
   };
+
+  // are all stages completed?
   const allCompleted = currentStages.every(
     (stage) => stage.status === "completed",
   );
+
+  // reset fnc
+  const resetTracking = () => {
+    setCurrentStages(stages);
+    setLogs([]);
+  };
   return (
     <section>
-      <h2 className="text-xl font-semibold mb-2">Tracking Demo</h2>
+      <h2 className="text-xl font-semibold mb-2">
+        Tracking Demo for {companyName}
+      </h2>
       <ul className="space-y-2">
         {currentStages.map((stage, index) => (
           <li
@@ -87,10 +101,10 @@ const TrackingDemo = ({ stages }: TrackingDemoProps) => {
             : "bg-black text-white hover:opacity-90 cursor-pointer",
         )}
       >
-        {allCompleted ? "All stages completed" : "Move forward"}
+        {allCompleted ? "All stages completed" : "Move Forward"}
       </button>
       <button
-        onClick={() => setCurrentStages(stages)}
+        onClick={() => resetTracking()}
         className="mt-2 px-4 py-2 border rounded cursor-pointer text-gray-600 hover:bg-gray-100 transition"
       >
         Reset
