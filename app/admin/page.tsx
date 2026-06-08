@@ -12,7 +12,7 @@ export default async function AdminPage() {
       <section className="space-y-2">
         <h1 className="text-3xl font-bold">Admin Dashboard</h1>
 
-        <p className="text-gray-600">Manage shipment updates and logs.</p>
+        <p className="text-sm">Manage shipment updates and logs.</p>
       </section>
 
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -28,9 +28,8 @@ export default async function AdminPage() {
           }
         />
       </section>
-      <div className="mt-10">
-        <LogsContainer />
-      </div>
+
+      <LogsContainer />
     </main>
   );
 }

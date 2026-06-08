@@ -15,7 +15,7 @@ const TrackingDemo = ({ stages, companyName }: TrackingDemoProps) => {
   useEffect(() => {
     setCurrentStages(stages);
   }, [stages]);
-  const [logs, setLogs] = useState<string[]>([]);
+  const [stagesLogs, setStagesLogs] = useState<string[]>([]);
 
   const moveForward = () => {
     let logMessage = "";
@@ -46,10 +46,11 @@ const TrackingDemo = ({ stages, companyName }: TrackingDemoProps) => {
 
       return stage;
     });
+
     setCurrentStages(updated);
 
     if (logMessage) {
-      setLogs((prev) => [...prev, logMessage]);
+      setStagesLogs((prev) => [...prev, logMessage]);
     }
   };
 
@@ -61,7 +62,7 @@ const TrackingDemo = ({ stages, companyName }: TrackingDemoProps) => {
   // reset fnc
   const resetTracking = () => {
     setCurrentStages(stages);
-    setLogs([]);
+    setStagesLogs([]);
   };
   return (
     <section>
@@ -78,47 +79,46 @@ const TrackingDemo = ({ stages, companyName }: TrackingDemoProps) => {
               "text-gray-500 bg-gray-100": stage.status === "pending",
             })}
           >
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between ">
               <span>{stage.name}</span>
-              {stage.time && (
-                <span className="text-xs text-gray-500">{stage.time}</span>
-              )}
               <span className="text-sm capitalize">{stage.status}</span>
-              {stage.location && (
-                <span className="text-xs text-gray-500">{stage.location}</span>
-              )}
+            </div>
+
+            <div className="mt-1 flex gap-4 text-xs text-gray-500">
+              {stage.time && <span>{stage.time}</span>}
+
+              {stage.location && <span>{stage.location}</span>}
             </div>
           </li>
         ))}
       </ul>
-      <button
-        onClick={moveForward}
-        disabled={allCompleted}
-        className={clsx(
-          "mt-4 px-4 py-2 rounded transition",
-          allCompleted
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-black text-white hover:opacity-90 cursor-pointer",
-        )}
-      >
-        {allCompleted ? "All stages completed" : "Move Forward"}
-      </button>
-      <button
-        onClick={() => resetTracking()}
-        className="mt-2 px-4 py-2 border rounded cursor-pointer text-gray-600 hover:bg-gray-100 transition"
-      >
-        Reset
-      </button>
+      <div className="mt-4 flex gap-3">
+        <button
+          onClick={moveForward}
+          disabled={allCompleted}
+          className={clsx("px-4 py-2 rounded bg-green-600 text-white")}
+        >
+          {allCompleted ? "All stages completed" : "Move Forward"}
+        </button>
+        <button
+          onClick={() => resetTracking()}
+          className=" px-4 py-2 border rounded text-sm  hover:opacity-100"
+        >
+          Reset
+        </button>
+      </div>
 
-      {/* logs */}
-      <section className="mt-6">
-        <h3 className="font-semibold">Update Log</h3>
-        <ul className="text-sm text-gray-600">
-          {logs.map((log, i) => (
-            <li key={i}>{log}</li>
-          ))}
-        </ul>
-      </section>
+      {/* updated stages */}
+      {stagesLogs.length > 0 && (
+        <section className="mt-6 border rounded-xl p-4">
+          <h3 className="font-semibold mb-2">Shipment Progress History</h3>
+          <ul className="text-sm">
+            {stagesLogs.map((log, i) => (
+              <li key={i}>{log}</li>
+            ))}
+          </ul>
+        </section>
+      )}
     </section>
   );
 };

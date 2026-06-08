@@ -17,6 +17,5 @@ const stages: Stage[] = [
 ];
 
 export async function GET() {
-  await new Promise((resolve) => setTimeout(resolve, 3000));
   return Response.json(stages);
 }

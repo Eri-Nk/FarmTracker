@@ -6,15 +6,15 @@ import { deleteLog } from "@/lib/logsData";
 export async function addLog(formData: FormData) {
   const message = formData.get("message") as string;
 
-  //await new Promise((resolve) => setTimeout(resolve, 2000));
+  const cleanMessage = message?.trim();
+  if (!cleanMessage) {
+    throw new Error("Message is required");
+  }
 
-  //throw new Error("Failed to save log");
-  addLogEntry(message);
+  addLogEntry(cleanMessage);
   revalidatePath("/");
 }
 
 export async function removeLog(index: number) {
-  await new Promise((r) => setTimeout(r, 1000));
-
   deleteLog(index);
 }

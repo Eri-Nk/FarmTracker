@@ -19,8 +19,14 @@ export default function AddLogForm({
       action={async (formData) => {
         const message = formData.get("message") as string;
 
+        const cleanMessage = message?.trim();
+        if (!cleanMessage) {
+          setError("Message is required");
+          return;
+        }
+
         startTransition(() => {
-          updateOptimisticLogs({ type: "add", log: message });
+          updateOptimisticLogs({ type: "add", log: cleanMessage });
         });
 
         try {
@@ -36,12 +42,13 @@ export default function AddLogForm({
       <h2 className="text-lg font-semibold">Add Delivery Log</h2>
 
       <input
+        required
         type="text"
         name="message"
         placeholder="Enter log message"
         className="w-full border rounded-lg p-2"
       />
-      <SubmitButton />
+      <SubmitButton idleText="Submit Log" pendingText="Submitting..." />
     </form>
   );
 }

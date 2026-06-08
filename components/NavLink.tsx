@@ -11,14 +11,14 @@ type NavLinkProps = {
 
 export default function NavLink({ href, children }: NavLinkProps) {
   const pathname = usePathname();
+
+  const isActive = pathname === href;
   return (
     <Link
       href={href}
       className={clsx(
         "transition font-medium",
-        pathname === href
-          ? "text-green-600 font-bold"
-          : "text-gray-600 hover:text-green-600",
+        isActive ? "text-green-600 font-bold" : " hover:text-green-600",
       )}
     >
       {children}
