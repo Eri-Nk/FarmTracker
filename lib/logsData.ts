@@ -6,8 +6,6 @@ export let logs: string[] = [
 
 export function addLogEntry(message: string) {
   logs.unshift(message);
-
-  console.log("from server actions", logs);
 }
 
 export function deleteLog(index: number) {

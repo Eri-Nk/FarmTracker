@@ -11,11 +11,12 @@ type TrackingDemoProps = {
 
 const TrackingDemo = ({ stages, companyName }: TrackingDemoProps) => {
   const [currentStages, setCurrentStages] = useState(stages);
+  const [stagesLogs, setStagesLogs] = useState<string[]>([]);
+  const [history, setHistory] = useState<Stage[][]>([]);
 
   useEffect(() => {
     setCurrentStages(stages);
   }, [stages]);
-  const [stagesLogs, setStagesLogs] = useState<string[]>([]);
 
   const moveForward = () => {
     let logMessage = "";
@@ -47,6 +48,9 @@ const TrackingDemo = ({ stages, companyName }: TrackingDemoProps) => {
       return stage;
     });
 
+    //in history logic, the below order is necessary. Store the current state in history then update
+    //the current state...check undo function for more explanation
+    setHistory((prev) => [...prev, currentStages]);
     setCurrentStages(updated);
 
     if (logMessage) {
@@ -59,10 +63,25 @@ const TrackingDemo = ({ stages, companyName }: TrackingDemoProps) => {
     (stage) => stage.status === "completed",
   );
 
+  //undo function to understand history $ time travel
+  const undoMove = () => {
+    const previousState = history[history.length - 1];
+    if (!previousState) return;
+
+    //now set the current state to the last state in history snapshot
+    // and remove it from history snapshot
+    setCurrentStages(previousState);
+    setHistory((prev) => prev.slice(0, -1));
+
+    setStagesLogs((prev) => prev.slice(0, -1));
+    //for good UI
+  };
+
   // reset fnc
   const resetTracking = () => {
     setCurrentStages(stages);
     setStagesLogs([]);
+    setHistory([]);
   };
   return (
     <section>
@@ -92,6 +111,7 @@ const TrackingDemo = ({ stages, companyName }: TrackingDemoProps) => {
           </li>
         ))}
       </ul>
+      {/* btns */}
       <div className="mt-4 flex gap-3">
         <button
           onClick={moveForward}
@@ -101,13 +121,20 @@ const TrackingDemo = ({ stages, companyName }: TrackingDemoProps) => {
           {allCompleted ? "All stages completed" : "Move Forward"}
         </button>
         <button
+          onClick={undoMove}
+          disabled={history.length === 0}
+          className="px-4 py-2 border rounded text-sm"
+        >
+          Undo
+        </button>
+        <button
           onClick={() => resetTracking()}
           className=" px-4 py-2 border rounded text-sm  hover:opacity-100"
+          disabled={history.length === 0}
         >
           Reset
         </button>
       </div>
-
       {/* updated stages */}
       {stagesLogs.length > 0 && (
         <section className="mt-6 border rounded-xl p-4">
