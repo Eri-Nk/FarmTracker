@@ -48,6 +48,7 @@ export default function LoginPage() {
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
+           
 
             {state.error && (
               <p className="text-red-500 text-sm">{state.error}</p>
@@ -55,7 +56,11 @@ export default function LoginPage() {
           </div>
 
           <SubmitButton idleText="Login" pendingText="Logging in..." />
+           <div className="text-sm opacity-70 mt-2">Use demo password: admin123</div>
+          
+
         </form>
+        
       </div>
     </main>
   );
